@@ -44,7 +44,7 @@ assertEqual(car.model, "458");
 Updates are also possible:
 
 ```js
-cars.read(0, {
+cars.update(0, {
    make: "Fiat",
    model: "Panda"
 });
