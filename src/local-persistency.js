@@ -1,10 +1,10 @@
-LocalPersistency = (function() {
+var LocalPersistency = (function () {
 
    "use strict";
 
    function sortByPrimaryKeyAsc(a, b) {
       var pkeyA = a.pkey,
-            pkeyB = b.pkey;
+         pkeyB = b.pkey;
       if (pkeyA < pkeyB) {
          return -1;
       } else if (pkeyA > pkeyB) {
@@ -15,7 +15,7 @@ LocalPersistency = (function() {
 
    function sortByPrimaryKeyDesc(a, b) {
       var pkeyA = a.pkey,
-            pkeyB = b.pkey;
+         pkeyB = b.pkey;
       if (pkeyA < pkeyB) {
          return 1;
       } else if (pkeyA > pkeyB) {
@@ -31,7 +31,7 @@ LocalPersistency = (function() {
     * @constructor
     * @param {String} name The table name
     */
-   var Table = function(name) {
+   var Table = function (name) {
       this._name = name;
       this._maxPrimaryKey = localStorage.getItem(this._getFullyQualifiedKeyOfMaxPrimaryKey());
       if (this._maxPrimaryKey) {
@@ -49,7 +49,7 @@ LocalPersistency = (function() {
     * @param {Mixed} data
     * @return {Number} The automatically associated primary key
     */
-   klass.prototype.create = function(data) {
+   klass.prototype.create = function (data) {
       this._incrementMaxPrimaryKey();
       localStorage.setItem(this._name + ":" + this._maxPrimaryKey, JSON.stringify(data));
       return this._maxPrimaryKey;
@@ -61,7 +61,7 @@ LocalPersistency = (function() {
     * @param {Number} pkey
     * @return {Mixed}
     */
-   klass.prototype.read = function(pkey) {
+   klass.prototype.read = function (pkey) {
       return JSON.parse(localStorage.getItem(this._name + ":" + pkey));
    };
 
@@ -71,14 +71,14 @@ LocalPersistency = (function() {
     * @param {Number} pkey
     * @param {Mixed} data
     */
-   klass.prototype.update = function(pkey, data) {
+   klass.prototype.update = function (pkey, data) {
       localStorage.setItem(this._name + ":" + pkey, JSON.stringify(data));
    };
 
    /**
     * @param {Number} pkey Remove the corresponding row.
     */
-   klass.prototype.delete = function(pkey) {
+   klass.prototype.delete = function (pkey) {
       if (pkey === "max") {
          throw new Error("You cannot delete this key. It is for internal usage only!");
       }
@@ -103,7 +103,7 @@ LocalPersistency = (function() {
     *    data: mixed
     * }]
     */
-   klass.prototype.slot = function(offset, howMany, orderBy) {
+   klass.prototype.slot = function (offset, howMany, orderBy) {
 
       var copy = [];
       for (var i = 0; i < localStorage.length; i++) {
@@ -121,7 +121,7 @@ LocalPersistency = (function() {
       } else if (orderBy === "desc") {
          copy.sort(sortByPrimaryKeyDesc);
       } else if (typeof orderBy === "function") {
-         copy.sort(function(a, b) {
+         copy.sort(function (a, b) {
             return orderBy(a.data, b.data);
          });
       } else {
@@ -134,7 +134,7 @@ LocalPersistency = (function() {
    /**
     * @return {Number} The number of elements in the table.
     */
-   klass.prototype.count = function() {
+   klass.prototype.count = function () {
       var counter = 0;
       for (var p in localStorage) {
          if (this._isAKeyOfTheTable(p)) {
@@ -148,7 +148,7 @@ LocalPersistency = (function() {
    /**
     * Truncate the table but does not reset the max primary key to be used with the next insert (like in a real db)
     */
-   klass.prototype.truncate = function() {
+   klass.prototype.truncate = function () {
       for (var p in localStorage) {
          if (p !== this._getFullyQualifiedKeyOfMaxPrimaryKey() && this._isAKeyOfTheTable(p)) {
             this.delete(this._extractPrimaryKeyFromFullyQualifiedKey(p));
@@ -159,30 +159,30 @@ LocalPersistency = (function() {
    /**
     * Reset the max primary key to be used with the next insert.
     */
-   klass.prototype._resetMaxPrimaryKey = function() {
+   klass.prototype._resetMaxPrimaryKey = function () {
       this._maxPrimaryKey = -1;
       localStorage.setItem(this._getFullyQualifiedKeyOfMaxPrimaryKey(), this._maxPrimaryKey);
    };
 
-   klass.prototype._incrementMaxPrimaryKey = function() {
+   klass.prototype._incrementMaxPrimaryKey = function () {
       this._maxPrimaryKey = this._maxPrimaryKey + 1;
       localStorage.setItem(this._getFullyQualifiedKeyOfMaxPrimaryKey(), this._maxPrimaryKey);
    };
 
-   klass.prototype._getFullyQualifiedKeyOfMaxPrimaryKey = function() {
+   klass.prototype._getFullyQualifiedKeyOfMaxPrimaryKey = function () {
       return this._name + ":max";
    };
 
-   klass.prototype._extractPrimaryKeyFromFullyQualifiedKey = function(fullyQualifiedKey) {
+   klass.prototype._extractPrimaryKeyFromFullyQualifiedKey = function (fullyQualifiedKey) {
       return parseInt(fullyQualifiedKey.substring(this._name.length + 1)); // which is the length of the prefix `table-name` + `:`
    };
 
-   klass.prototype._isAKeyOfTheTable = function(key) {
+   klass.prototype._isAKeyOfTheTable = function (key) {
       return key.indexOf(this._name + ":") === 0;
    };
 
    return {
-      table: function(name) {
+      table: function (name) {
          if (!cache[name]) {
             cache[name] = new Table(name);
          }
@@ -191,3 +191,9 @@ LocalPersistency = (function() {
    };
 
 })();
+
+if (typeof module !== "undefined") {
+   if (module.exports) {
+      module.exports = LocalPersistency;
+   }
+}
