@@ -1,5 +1,15 @@
 {
-   "name": "local-persistency",
-   "version": "0.0.0",
-   "main": "src/local-persistency.js"
+  "name": "local-persistency",
+  "version": "0.0.0",
+  "main": "src/local-persistency.js",
+  "scripts": {
+     "test": "karma start --single-run"
+  },
+  "devDependencies": {
+     "jasmine": "^3.3.0",
+     "karma": "^3.1.1",
+     "karma-chrome-launcher": "^2.2.0",
+     "karma-cli": "^1.0.1",
+     "karma-jasmine": "^2.0.1"
+  }
 }

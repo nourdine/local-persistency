@@ -1,8 +1,0 @@
-{
-   "name": "local-persistency",
-   "private": true,
-   "dependencies": {},
-   "devDependencies": {
-      "jasmine-core": "^2.4.1"
-   }
-}
