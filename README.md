@@ -130,7 +130,7 @@ assertEqual(cars.count(), 0);
 
 Remember that truncating a table **does not reset** its primary key generator!
 
-### Dev commands ###
+### How to run Unit Tests ###
 
 ```cmd
 npm i
